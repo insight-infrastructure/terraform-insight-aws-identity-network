@@ -37,7 +37,7 @@ variable "bucket_versioning" {
 }
 
 variable "bucket_force_destroy" {
-  default     = false
+  default     = true
   type        = bool
   description = "The bucket and all objects should be destroyed when using true"
 }
