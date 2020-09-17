@@ -9,10 +9,6 @@ output "internal_tld" {
   value = var.internal_tld
 }
 
-output "public_regional_domain" {
-  value = var.create_public_regional_subdomain ? local.public_domain : ""
-}
-
 #####
 # SGs
 #####

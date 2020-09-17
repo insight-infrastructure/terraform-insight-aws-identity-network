@@ -27,7 +27,7 @@ variable "zone_id" {
 
 data "aws_route53_zone" "this" {
   count = var.domain_name == "" ? 0 : 1
-  name = "${var.domain_name}."
+  name  = "${var.domain_name}."
 }
 
 locals {
@@ -36,15 +36,15 @@ locals {
 
 resource "aws_route53_zone" "root_private" {
   count = local.create_internal_domain ? 1 : 0
-  name = "${var.namespace}.${var.internal_tld}."
+  name  = "${var.namespace}.${var.internal_tld}."
 
   vpc {
-    vpc_id = module.vpc.vpc_id
+    vpc_id     = module.vpc.vpc_id
     vpc_region = data.aws_region.current.name
   }
 
   tags = merge(var.tags, {
-    "Region" = data.aws_region.current.name,
+    "Region"   = data.aws_region.current.name,
     "ZoneType" = "Private"
   })
 }

@@ -6,8 +6,8 @@ variable "cloudflare_enable" {
 
 variable "create" {
   description = "Bool to create"
-  type = bool
-  default = true
+  type        = bool
+  default     = true
 }
 
 ########
@@ -27,14 +27,14 @@ variable "tags" {
 
 variable "id" {
   description = "Unique string identifier"
-  type = string
-  default = ""
+  type        = string
+  default     = ""
 }
 
 variable "namespace" {
   description = "Namespace for internal dns"
-  type = string
-  default = "insight"
+  type        = string
+  default     = "insight"
 }
 
 ##################

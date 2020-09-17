@@ -4,7 +4,7 @@ resource "aws_security_group" "bastion_public" {
   name        = var.bastion_sg_name
   description = "Bastion inbound ssh traffic"
   vpc_id      = module.vpc.vpc_id
-  tags   = merge({ Name : var.bastion_sg_name }, var.tags)
+  tags        = merge({ Name : var.bastion_sg_name }, var.tags)
 }
 
 resource "aws_security_group_rule" "bastion_ssh_public" {
