@@ -13,10 +13,9 @@ For Terraform v0.12.0+
 
 ## Usage
 
-```
+```hcl
 module "this" {
-    source = "github.com/insight-infrastructure/terraform-aws-insight-network"
-
+  source = "github.com/insight-infrastructure/terraform-aws-insight-network"
 }
 ```
 ## Examples
