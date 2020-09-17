@@ -12,7 +12,7 @@ module "consul_sg" {
   ingress_with_source_security_group_id = concat(local.bastion_enabled ? [
     {
       rule                     = "ssh-tcp"
-      source_security_group_id = module.bastion_sg.this_security_group_id
+      source_security_group_id = join("", aws_security_group.bastion_public.*.id)
     }] : [], local.monitoring_enabled ? [
     {
       from_port                = 9100
@@ -59,3 +59,5 @@ module "consul_sg" {
       cidr_blocks = "0.0.0.0/0"
   }, ]
 }
+
+

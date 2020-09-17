@@ -1,20 +1,48 @@
 
-module "bastion_sg" {
-  source      = "github.com/terraform-aws-modules/terraform-aws-security-group.git?ref=v3.2.0"
+resource "aws_security_group" "bastion_public" {
+  count       = var.create && var.enable_bastion ? 1 : 0
   name        = var.bastion_sg_name
-  description = "All traffic"
-
-  create = local.bastion_enabled
-  vpc_id = module.vpc.vpc_id
+  description = "Bastion inbound ssh traffic"
+  vpc_id      = module.vpc.vpc_id
   tags   = merge({ Name : var.bastion_sg_name }, var.tags)
 }
 
-resource "aws_security_group_rule" "bastion-ssh" {
-  count             = local.bastion_enabled ? 1 : 0
-  type              = "ingress"
-  protocol          = "tcp"
+resource "aws_security_group_rule" "bastion_ssh_public" {
+  count             = var.create && var.enable_bastion ? 1 : 0
   from_port         = 22
   to_port           = 22
+  protocol          = "tcp"
+  security_group_id = join("", aws_security_group.bastion_public.*.id)
   cidr_blocks       = ["0.0.0.0/0"]
-  security_group_id = module.bastion_sg.this_security_group_id
+  type              = "ingress"
+}
+
+resource "aws_security_group_rule" "bastion_egress" {
+  count             = var.create && var.enable_bastion ? 1 : 0
+  from_port         = 0
+  to_port           = 65535
+  protocol          = "tcp"
+  cidr_blocks       = ["0.0.0.0/0"]
+  security_group_id = join("", aws_security_group.bastion_public.*.id)
+  type              = "egress"
+}
+
+resource "aws_security_group" "bastion_private" {
+  count = var.create && var.enable_bastion ? 1 : 0
+
+  description = "Enable SSH access to the bastion host from private hosts via SSH port"
+
+  vpc_id = module.vpc.vpc_id
+  name   = "${local.id}-bastion-private-sg"
+  tags   = var.tags
+}
+
+resource "aws_security_group_rule" "bastion_ssh_private" {
+  count                    = var.create && var.enable_bastion ? 1 : 0
+  from_port                = 22
+  to_port                  = 22
+  protocol                 = "tcp"
+  security_group_id        = join("", aws_security_group.bastion_private.*.id)
+  source_security_group_id = join("", aws_security_group.bastion_public.*.id)
+  type                     = "ingress"
 }
