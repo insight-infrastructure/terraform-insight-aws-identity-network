@@ -5,16 +5,13 @@ terraform {
 
 data "aws_region" "current" {}
 
-//module "label" {
-//  source = "github.com/robc-io/terraform-null-label.git?ref=0.16.1"
-//  tags = {
-//    NetworkName = var.network_name
-//    Owner       = var.owner
-//    Terraform   = true
-//    VpcType     = "main"
-//  }
-//
-//  environment = var.environment
-//  namespace   = var.namespace
-//  stage       = var.stage
-//}
+locals {
+  id = var.id == "" ? var.name : var.id
+
+  bastion_enabled    = var.all_enabled ? true : var.bastion_enabled
+  consul_enabled     = var.all_enabled ? true : var.consul_enabled
+  hids_enabled       = var.all_enabled ? true : var.hids_enabled
+  logging_enabled    = var.all_enabled ? true : var.logging_enabled
+  monitoring_enabled = var.all_enabled ? true : var.monitoring_enabled
+  vault_enabled      = var.all_enabled ? true : var.vault_enabled
+}

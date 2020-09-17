@@ -4,6 +4,12 @@ variable "cloudflare_enable" {
   default     = false
 }
 
+variable "create" {
+  description = "Bool to create"
+  type = bool
+  default = true
+}
+
 ########
 # Label
 ########
@@ -13,83 +19,22 @@ variable "name" {
   default     = "polkadot-api"
 }
 
-variable "namespace" {
-  description = "The namespace of the deployment"
-  type        = string
-  default     = "insight"
-}
-
 variable "tags" {
   description = "The tags of the deployment"
   type        = map(string)
   default     = {}
 }
 
-######
-# DNS
-######
-
-variable "subdomain" {
-  description = ""
-  type        = string
-  default     = ""
+variable "id" {
+  description = "Unique string identifier"
+  type = string
+  default = ""
 }
 
-variable "internal_tld" {
-  description = "The top level domain for the internal DNS"
-  type        = string
-  default     = "internal"
-}
-
-variable "root_domain_name" {
-  description = "The public domain"
-  type        = string
-  default     = ""
-}
-
-variable "create_internal_domain" {
-  description = "Boolean to create an internal split horizon DNS"
-  type        = bool
-  default     = false
-}
-
-variable "create_public_regional_subdomain" {
-  description = "Boolean to create regional subdomain - ie us-east-1.example.com"
-  type        = bool
-  default     = false
-}
-
-variable "zone_id" {
-  description = "The zone ID to configure as the root zoon - ie subdomain.example.com's zone ID"
-  type        = string
-  default     = ""
-}
-
-######
-# VPC
-######
-variable "vpc_name" {
-  description = "The name of the VPC"
-  type        = string
-  default     = ""
-}
-
-variable "azs" {
-  description = "List of availability zones"
-  type        = list(string)
-  default     = []
-}
-
-variable "num_azs" {
-  description = "The number of AZs to deploy into"
-  type        = number
-  default     = 0
-}
-
-variable "cidr" {
-  description = "The cidr range for network"
-  type        = string
-  default     = "10.0.0.0/16"
+variable "namespace" {
+  description = "Namespace for internal dns"
+  type = string
+  default = "insight"
 }
 
 ##################

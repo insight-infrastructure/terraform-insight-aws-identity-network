@@ -1,6 +1,33 @@
+######
+# DNS
+######
+variable "internal_tld" {
+  description = "The top level domain for the internal DNS"
+  type        = string
+  default     = "internal"
+}
+
+variable "create_internal_domain" {
+  description = "Boolean to create an internal split horizon DNS"
+  type        = bool
+  default     = false
+}
+
+variable "create_public_regional_subdomain" {
+  description = "Boolean to create regional subdomain - ie us-east-1.example.com"
+  type        = bool
+  default     = false
+}
+
+variable "zone_id" {
+  description = "The zone ID to configure as the root zoon - ie subdomain.example.com's zone ID"
+  type        = string
+  default     = ""
+}
+
 data "aws_route53_zone" "this" {
-  count = var.root_domain_name == "" ? 0 : 1
-  name = "${var.root_domain_name}."
+  count = var.domain_name == "" ? 0 : 1
+  name = "${var.domain_name}."
 }
 
 locals {

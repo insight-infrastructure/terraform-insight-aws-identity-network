@@ -1,26 +1,40 @@
-locals {
-  //    Logic for AZs is azs variable > az_num variable > max azs for region
-  az_num = chunklist(data.aws_availability_zones.available.names, var.num_azs)[0]
-  az_max = data.aws_availability_zones.available.names
-  azs    = coalescelist(var.azs, local.az_num, local.az_max)
+######
+# VPC
+######
+variable "vpc_name" {
+  description = "The name of the VPC"
+  type        = string
+  default     = ""
+}
 
-  num_azs = length(local.azs)
-  //  TODO: If making additional subnets, this will change
-  subnet_num   = 2
-  subnet_count = local.subnet_num * local.num_azs
+variable "azs" {
+  description = "List of availability zones"
+  type        = list(string)
+  default     = []
+}
 
-  subnet_bits = ceil(log(local.subnet_count, 2))
+variable "num_azs" {
+  description = "The number of AZs to deploy into"
+  type        = number
+  default     = 0
+}
 
-  public_subnets = [for subnet_num in range(local.num_azs) : cidrsubnet(
-    var.cidr,
-    local.subnet_bits,
-  subnet_num)]
+variable "cidr" {
+  description = "The cidr range for network"
+  type        = string
+  default     = "10.0.1.0/16"
+}
 
-  private_subnets = [for subnet_num in range(local.num_azs) : cidrsubnet(
-    var.cidr,
-    local.subnet_bits,
-    local.num_azs + subnet_num,
-  )]
+variable "private_subnets" {
+  description = "private_subnets cidr blocks"
+  type = list(string)
+  default = ["10.0.1.0/24", "10.0.2.0/24", "10.0.3.0/24"]
+}
+
+variable "public_subnets" {
+  description = "public_subnets cidr blocks"
+  type = list(string)
+  default = ["10.0.101.0/24", "10.0.102.0/24", "10.0.103.0/24"]
 }
 
 data "aws_availability_zones" "available" {
@@ -40,11 +54,11 @@ module "vpc" {
   enable_dns_hostnames = true
   enable_dns_support   = true
 
-  azs  = local.azs
+  azs  = var.azs
   cidr = var.cidr
 
-  public_subnets  = local.public_subnets
-  private_subnets = local.private_subnets
+  public_subnets  = var.public_subnets
+  private_subnets = var.private_subnets
 
   public_subnet_tags = {
     "kubernetes.io/cluster/${local.id}" = "shared"

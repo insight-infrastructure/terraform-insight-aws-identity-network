@@ -2,7 +2,7 @@
 # DNS
 #####
 output "root_domain_name" {
-  value = var.root_domain_name
+  value = var.domain_name
 }
 
 output "internal_tld" {
@@ -17,7 +17,7 @@ output "public_regional_domain" {
 # SGs
 #####
 output "bastion_security_group_id" {
-  value = module.bastion_sg.this_security_group_id
+  value = join("", aws_security_group.bastion_public.*.id)
 }
 
 output "consul_security_group_id" {
